@@ -1,28 +1,28 @@
 from PyPDF2 import PdfReader
 import csv
 import nltk
+import re
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 
-# ensure nltk is downloaded
+# Ensure NLTK data is downloaded
 try:
     nltk.data.find('corpora/stopwords')
-    nltk.data.find('tokenizers/punkt')
-    nltk.data.find('tokenizers/punkt_tab')
 except LookupError:
     nltk.download('stopwords')
-    nltk.download('punkt')
-    nltk.download('punkt_tab')
 
 stop_words = set(stopwords.words('english'))
 
-
 def load_skills():
+    """Reads skills from CSV and returns a list."""
     skills = []
-    with open("skills.csv", "r") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            skills.append(row["skill"].lower())
+    try:
+        with open("skills.csv", "r") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row["skill"]:
+                    skills.append(row["skill"].strip())
+    except Exception:
+        pass
     return skills
 
 COMMON_SKILLS = load_skills()
@@ -40,50 +40,67 @@ SUGGESTIONS = {
     "kubernetes": "Learn about orchestration, pods, and service discovery.",
 }
 
-# text from PDF
 def extract_text_from_pdf(file):
+    """Extracts text from a PDF file object."""
     reader = PdfReader(file)
     text = ""
-
     for page in reader.pages:
-        if page.extract_text():
-            text += page.extract_text()
-
-    return text.lower()
-
-def normalize_text(text):
-    return "".join(c for c in text.lower() if c.isalnum())
+        page_text = page.extract_text()
+        if page_text:
+            text += page_text + " "
+    return text
 
 def extract_skills(text):
+    """
+    Extracts skills using strict regex matching with word boundaries.
+    Handles variations like 'node.js' vs 'nodejs' safely.
+    """
     found = set()
     text_lower = text.lower()
-    text_normalized = normalize_text(text)
+    
+    # Remove extra whitespace and noise for cleaner matching
+    text_clean = " ".join(text_lower.split())
 
     for skill in COMMON_SKILLS:
-        skill_lower = skill.lower()
-        skill_normalized = normalize_text(skill)
-        if skill_lower in text_lower or skill_normalized in text_normalized:
-            found.add(skill)
+        skill_lower = skill.lower().strip()
+        if not skill_lower:
+            continue
             
-    return list(found)
+        # Create variations for the skill
+        variations = [skill_lower]
+        if "." in skill_lower:
+            variations.append(skill_lower.replace(".", ""))
+        if "-" in skill_lower:
+            variations.append(skill_lower.replace("-", " "))
+            variations.append(skill_lower.replace("-", ""))
+            
+        for var in variations:
+            # \b ensures we match 'git' but NOT 'digital'
+            # re.escape handles special characters like '.' in 'node.js'
+            pattern = rf'\b{re.escape(var)}\b'
+            if re.search(pattern, text_clean):
+                found.add(skill)
+                break
+                
+    return sorted(list(found))
 
 def analyze(resume_text, jd_text):
+    """
+    Compares resume skills against JD skills and calculates ATS score.
+    """
     resume_skills = set(extract_skills(resume_text))
     jd_skills = set(extract_skills(jd_text))
 
     matched = sorted(list(resume_skills & jd_skills))
     missing = sorted(list(jd_skills - resume_skills))
 
-    # ats score logic
     score = 0
     if jd_skills:
-        match_rate = len(matched) / len(jd_skills)
-        score = int(match_rate * 100)
+        score = int((len(matched) / len(jd_skills)) * 100)
 
-    # Simple suggestions logic
     recommendations = []
     for skill in missing:
-        suggestion = SUGGESTIONS.get(skill.lower(), f"Consider gaining hands-on experience with {skill}")
+        suggestion = SUGGESTIONS.get(skill.lower(), f"Focus on learning and applying {skill} in real-world projects.")
         recommendations.append({
             "skill": skill,
             "suggestion": suggestion
