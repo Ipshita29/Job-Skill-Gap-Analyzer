@@ -1,635 +1,377 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Precision Architect | Skill Gap Analyzer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Job Skill Gap Analyzer | Botanical Nocturne</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <style>
-        :root {
-            /* Tonal Foundation */
-            --background: #060e20;
-            --surface: #060e20;
-            --surface-container-low: #091328;
-            --surface-container: #0f1930;
-            --surface-container-high: #141f38;
-            --surface-container-highest: #192540;
-            --surface-bright: #1f2b49;
-            --surface-variant: rgba(25, 37, 64, 0.6);
-            
-            /* Action Colors */
-            --primary: #ffdd73;
-            --primary-container: #fbcd16;
-            --primary-dim: #eec200;
-            --secondary: #fddb42;
-            --secondary-container: #6f5d00;
-            
-            /* Text & UI */
-            --on-background: #dee5ff;
-            --on-surface: #dee5ff;
-            --on-surface-variant: #a3aac4;
-            --outline-variant: rgba(109, 117, 140, 0.15);
-            --error: #ff7351;
-            --success: #10B981;
-            
-            /* Shadows as Glow */
-            --glow-shadow: 0 20px 40px rgba(255, 221, 115, 0.06);
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            scrollbar-width: thin;
-            scrollbar-color: var(--surface-bright) var(--background);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--background);
-            color: var(--on-background);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-            padding-bottom: 5rem;
-        }
-
-        /* Editorial Typography Scale */
-        h1, h2, h3 {
-            font-family: 'Manrope', sans-serif;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-section {
-            padding: 8rem 8.5rem 5rem 8.5rem; /* Asymmetrical Editorial Spacing */
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        @media (max-width: 1024px) {
-            .hero-section { padding: 4rem 2rem; }
-        }
-
-        .eyebrow {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            display: inline-block;
-        }
-
-        h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 2rem;
-            max-width: 800px;
-            color: var(--on-surface);
-        }
-
-        .subtitle {
-            font-size: 1.25rem;
-            color: var(--on-surface-variant);
-            max-width: 600px;
-            margin-bottom: 4rem;
-            font-weight: 300;
-        }
-
-        /* The "Precision Primitives" Components */
-        .glass-card {
-            background: var(--surface-container-low);
-            padding: 3rem;
-            border-radius: 1.5rem;
-            position: relative;
-            z-index: 1;
-            margin-bottom: 4rem;
-            box-shadow: var(--glow-shadow);
-            transition: transform 0.3s ease;
-        }
-
-        .upload-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        @media (max-width: 768px) {
-            .upload-grid { grid-template-columns: 1fr; }
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        label {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--on-surface-variant);
-        }
-
-        .file-drop-zone {
-            background-color: var(--surface-container-high);
-            border: 1px solid var(--outline-variant);
-            padding: 2rem;
-            border-radius: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .file-drop-zone:hover {
-            background-color: var(--surface-container-highest);
-            border-color: var(--primary);
-        }
-
-        input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-label {
-            display: block;
-            font-size: 0.95rem;
-            color: var(--on-surface);
-            pointer-events: none;
-        }
-
-        .file-label .icon {
-            font-size: 1.5rem;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Buttons: The "Glass & Gradient" Rule */
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-container));
-            color: #000;
-            border: none;
-            padding: 1.25rem 2.5rem;
-            border-radius: 9999px; /* Pill shape */
-            font-family: 'Manrope', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            width: fit-content;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(255, 221, 115, 0.2);
-            filter: brightness(1.1);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Results Grid */
-        #results-container {
-            display: none;
-            padding-top: 5rem;
-        }
-
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 4rem;
-        }
-
-        .score-display {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-        }
-
-        .score-val {
-            font-family: 'Manrope', sans-serif;
-            font-size: 8rem;
-            font-weight: 800;
-            line-height: 1;
-            color: var(--primary);
-        }
-
-        .score-meta {
-            max-width: 300px;
-        }
-
-        .score-meta h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Skill Modules */
-        .skill-modules {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        @media (max-width: 900px) {
-            .skill-modules { grid-template-columns: 1fr; }
-        }
-
-        .module-card {
-            background: var(--surface-container-low);
-            padding: 2.5rem;
-            border-radius: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .module-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--on-surface-variant);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-        }
-
-        .chip-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
-        .skill-chip {
-            padding: 0.5rem 1.25rem;
-            border-radius: 9999px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            background: var(--surface-container-highest);
-            color: var(--on-surface);
-            border: 1px solid var(--outline-variant);
-            transition: all 0.2s ease;
-        }
-
-        .skill-chip.matched {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-            border-color: rgba(16, 185, 129, 0.2);
-        }
-
-        .skill-chip.missing {
-            background: rgba(255, 115, 81, 0.1);
-            color: var(--error);
-            border-color: rgba(255, 115, 81, 0.2);
-        }
-
-        /* Recommendations: Editorial List */
-        .recommendations {
-            background: var(--surface-container-low);
-            padding: 4rem;
-            border-radius: 1.5rem;
-        }
-
-        .recommendation-item {
-            padding: 2rem 0;
-            border-bottom: 1px solid var(--outline-variant);
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 2rem;
-        }
-
-        .recommendation-item:last-child { border-bottom: none; }
-
-        .rec-skill {
-            font-weight: 700;
-            color: var(--primary);
-            font-family: 'Manrope', sans-serif;
-        }
-
-        .rec-text {
-            color: var(--on-surface-variant);
-        }
-
-        /* Checkbox Style for Task List */
-        .checklist-item {
-            background: var(--surface-container-high);
-            padding: 1.25rem;
-            border-radius: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            border: 1px solid var(--outline-variant);
-            transition: all 0.2s ease;
-        }
-
-        .checklist-item:hover {
-            border-color: var(--primary);
-            background: var(--surface-container-highest);
-        }
-
-        .checkbox-mock {
-            width: 22px;
-            height: 22px;
-            border: 2.5px solid var(--primary);
-            border-radius: 6px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        /* Loading Overlay */
-        .loading-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(6, 14, 32, 0.9);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 2rem;
-        }
-
-        .loader {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--surface-container-highest);
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        #error-msg {
-            display: none;
-            color: var(--error);
-            margin-top: 2rem;
-            text-align: center;
-            font-weight: 500;
-        }
-
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary-fixed": "#fadae9",
+                        "outline": "#8d928d",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#0e1f15",
+                        "surface-container-low": "#1a1c1a",
+                        "on-background": "#e2e3df",
+                        "surface-tint": "#ebbac6",
+                        "tertiary-fixed-dim": "#ddbecd",
+                        "tertiary": "#ddbecd",
+                        "surface": "#121412",
+                        "inverse-surface": "#e2e3df",
+                        "on-surface": "#e2e3df",
+                        "on-primary-container": "#c698a4",
+                        "primary-fixed-dim": "#ebbac6",
+                        "primary-container": "#52303a",
+                        "on-secondary-container": "#a7baab",
+                        "on-tertiary-fixed": "#281620",
+                        "surface-dim": "#121412",
+                        "on-primary-fixed-variant": "#603d47",
+                        "primary-fixed": "#ffd9e2",
+                        "secondary": "#b8cbbc",
+                        "error-container": "#93000a",
+                        "secondary-fixed": "#d4e7d8",
+                        "on-error-container": "#ffdad6",
+                        "on-primary": "#472731",
+                        "outline-variant": "#434844",
+                        "on-tertiary-container": "#b99caa",
+                        "inverse-primary": "#7a545e",
+                        "surface-bright": "#383a37",
+                        "tertiary-container": "#49343f",
+                        "surface-container-highest": "#333533",
+                        "secondary-fixed-dim": "#b8cbbc",
+                        "on-secondary-fixed-variant": "#394b3f",
+                        "surface-variant": "#333533",
+                        "surface-container-high": "#282a28",
+                        "surface-container-lowest": "#0d0f0d",
+                        "on-primary-fixed": "#2f121c",
+                        "primary": "#ebbac6",
+                        "on-surface-variant": "#c3c8c2",
+                        "secondary-container": "#394b3f",
+                        "surface-container": "#1e201e",
+                        "on-secondary": "#233429",
+                        "background": "#121412",
+                        "on-tertiary": "#3f2a35",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed-variant": "#56404c",
+                        "inverse-on-surface": "#2f312f"
+                    },
+                    fontFamily: {
+                        "headline": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
 </head>
-<body>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-primary">
 
-<div class="loading-overlay" id="loading-overlay">
-    <div class="loader"></div>
-    <p style="font-family: 'Manrope'; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">Synthesizing Analysis...</p>
-</div>
-
-<div class="hero-section">
-    <span class="eyebrow">The Precision Architect</span>
-    <h1>Optimize Your Career Path With Mathematical Precision</h1>
-    <p class="subtitle">Extracting deep insights from your resume to align with high-performance job descriptions.</p>
-
-    <div class="glass-card">
-        <div class="upload-grid">
-            <div class="input-group">
-                <label>Professional Dossier (Resume PDF)</label>
-                <div class="file-drop-zone">
-                    <span class="file-label" id="resume-label"><span class="icon">📄</span>Drop or select PDF</span>
-                    <input type="file" id="resume" accept=".pdf" onchange="updateLabel('resume')">
-                </div>
-            </div>
-            <div class="input-group">
-                <label>Target Specification (Job PDF)</label>
-                <div class="file-drop-zone">
-                    <span class="file-label" id="jd-label"><span class="icon">💼</span>Drop or select PDF</span>
-                    <input type="file" id="jd" accept=".pdf" onchange="updateLabel('jd')">
-                </div>
-            </div>
-        </div>
-        
-        <button id="analyze-btn" class="btn-primary" onclick="handleAnalyze()">
-            Analyze Skill Gap
+<!-- Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-[#121412] flex justify-between items-center px-8 py-6 border-b border-white/5">
+    <div class="text-2xl font-headline text-primary tracking-tighter italic">Job Skill Gap Analyzer</div>
+    <div class="hidden md:flex items-center gap-10">
+        <a class="text-on-surface hover:text-primary transition-colors duration-300 font-label text-[10px] uppercase tracking-[0.2em]" href="#hero">Analysis</a>
+        <a class="text-on-surface hover:text-primary transition-colors duration-300 font-label text-[10px] uppercase tracking-[0.2em]" href="#results-section">Results</a>
+        <a class="text-on-surface hover:text-primary transition-colors duration-300 font-label text-[10px] uppercase tracking-[0.2em]" href="#">Documentation</a>
+    </div>
+    <div class="flex items-center gap-6">
+        <button class="text-primary hover:scale-110 duration-200">
+            <span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
         </button>
+    </div>
+</nav>
 
-        <div id="error-msg">Integration requires both specification files.</div>
+<main class="pt-32 pb-24">
+    
+    <!-- Hero Section -->
+    <section id="hero" class="px-8 md:px-20 mb-32">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+            <div class="md:col-span-8">
+                <span class="font-headline italic text-primary text-xl md:text-2xl mb-6 block">/01 Convergence</span>
+                <h1 class="font-headline text-5xl md:text-8xl leading-[1.1] tracking-tight text-on-surface">
+                    The <span class="italic text-primary">Technical</span> <br/> Nocturne.
+                </h1>
+            </div>
+            <div class="md:col-span-4 pb-4">
+                <p class="font-body text-on-surface-variant text-lg leading-relaxed max-w-sm">
+                    A curation of skill sets that flourish in complexity. We evaluate the quiet depth of your professional history against the demands of tomorrow.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="mb-40 px-8 md:px-20">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="group relative bg-surface-container hover:bg-surface-container-high p-12 rounded-lg transition-all duration-500 border border-outline-variant/10">
+                <h2 class="font-headline text-3xl mb-4 italic">Professional Dossier</h2>
+                <p class="text-on-surface-variant mb-8 font-light">Upload your career narrative in PDF format.</p>
+                <input type="file" id="resume" accept=".pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="updateFileName('resume-label', this)">
+                <div id="resume-label" class="text-xs uppercase tracking-widest text-primary border-b border-primary/30 inline-block pb-1">Select File</div>
+            </div>
+            <div class="group relative bg-surface-container hover:bg-surface-container-high p-12 rounded-lg transition-all duration-500 border border-outline-variant/10">
+                <h2 class="font-headline text-3xl mb-4 italic">Target Specification</h2>
+                <p class="text-on-surface-variant mb-8 font-light">Provide the parameters of your next destination.</p>
+                <input type="file" id="jd" accept=".pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="updateFileName('jd-label', this)">
+                <div id="jd-label" class="text-xs uppercase tracking-widest text-primary border-b border-primary/30 inline-block pb-1">Select File</div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto mt-12 text-center">
+            <button id="analyze-btn" onclick="analyzeSkills()" class="px-12 py-5 bg-gradient-to-r from-primary to-primary-container text-on-primary font-label text-xs uppercase tracking-[0.3em] rounded-md hover:opacity-90 transition-all duration-300 shadow-xl shadow-primary/10">
+                Initiate Analysis
+            </button>
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div id="loader" class="hidden fixed inset-0 z-50 bg-surface/95 backdrop-blur-md flex flex-col items-center justify-center">
+        <span class="material-symbols-outlined text-primary text-6xl animate-pulse mb-6" data-icon="hourglass_empty">hourglass_empty</span>
+        <p class="font-headline text-2xl italic text-on-surface animate-pulse">Synthesizing Technical Convergence...</p>
     </div>
 
-    <!-- Results Container -->
-    <div id="results-container">
-        <div class="results-header">
-            <div class="score-display">
-                <div class="score-val" id="score-val">0</div>
-                <div class="score-meta">
-                    <h2>% Match Score</h2>
-                    <p id="score-summary" style="color: var(--on-surface-variant);"></p>
+    <!-- Results Section -->
+    <div id="results-section" class="hidden">
+        
+        <!-- Score Block -->
+        <section class="bg-surface-container-low py-32 px-8 md:px-20 mb-40">
+            <div class="max-w-4xl mx-auto text-center">
+                <span class="material-symbols-outlined text-primary-container text-6xl mb-8 block" data-icon="equalizer">equalizer</span>
+                <blockquote class="font-headline text-5xl md:text-8xl italic leading-relaxed text-on-surface mb-6">
+                    <span id="score-val" class="text-primary">0</span>%
+                </blockquote>
+                <cite id="match-summary" class="text-xs uppercase tracking-[0.4em] font-label text-primary">— Technical Match Score</cite>
+            </div>
+        </section>
+
+        <!-- Technical Divergence -->
+        <section class="px-8 md:px-20 mb-40">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-end mb-16 border-b border-outline-variant/10 pb-8">
+                    <div>
+                        <span class="font-headline italic text-primary text-xl md:text-2xl mb-2 block">/02 Curation</span>
+                        <h2 class="font-headline text-4xl md:text-6xl tracking-tight">The Divergence.</h2>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="space-y-8">
+                        <h3 class="font-headline text-2xl italic text-secondary">Synchronized Skills</h3>
+                        <div id="matched-badges" class="flex flex-wrap gap-4"></div>
+                    </div>
+                    <div class="space-y-8">
+                        <h3 class="font-headline text-2xl italic text-tertiary">Missing Requirements</h3>
+                        <div id="missing-badges" class="flex flex-wrap gap-4"></div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="skill-modules">
-            <div class="module-card">
-                <h3><span style="color: var(--success)">•</span> Synchronized Skills</h3>
-                <div id="matched-badges" class="chip-container"></div>
-            </div>
-            <div class="module-card">
-                <h3><span style="color: var(--error)">•</span> Divergent Skills</h3>
-                <div id="missing-badges" class="chip-container"></div>
-            </div>
-        </div>
-
-        <div class="skill-modules">
-            <div class="module-card">
-                <h3><span style="color: var(--success)">•</span> Recruiter View: Strengths</h3>
-                <div id="recruiter-strengths" style="color: var(--on-surface-variant);">
-                    <!-- Populated by JS -->
+        <!-- Recruiter Perspective -->
+        <section class="px-8 md:px-20 mb-40">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 items-start">
+                <div class="w-full md:w-1/3">
+                    <span class="font-headline italic text-primary text-xl block mb-6">/03 Perspective</span>
+                    <h2 class="font-headline text-4xl mb-8 leading-tight">The <span class="italic">Recruiter's</span> Gaze.</h2>
+                    <p class="text-on-surface-variant font-light leading-relaxed">Evaluation through a lens of pragmatic necessity and industry standards.</p>
+                </div>
+                <div class="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-surface-container p-8 rounded-lg border border-secondary/10">
+                        <h4 class="font-headline text-xl text-secondary italic mb-6">Foundational Strengths</h4>
+                        <div id="strengths-list" class="space-y-4"></div>
+                    </div>
+                    <div class="bg-surface-container p-8 rounded-lg border border-error/10">
+                        <h4 class="font-headline text-xl text-error italic mb-6">Identified Frailties</h4>
+                        <div id="weaknesses-list" class="space-y-4"></div>
+                    </div>
                 </div>
             </div>
-            <div class="module-card">
-                <h3><span style="color: var(--error)">•</span> Recruiter View: Weaknesses</h3>
-                <div id="recruiter-weaknesses" style="color: var(--on-surface-variant);">
-                    <!-- Populated by JS -->
+        </section>
+
+        <!-- Roadmap & Tips -->
+        <section class="px-8 md:px-20 mb-40">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                    <div class="md:col-span-12 mb-12 text-center">
+                        <h2 class="font-headline text-[8vw] leading-none text-surface-container-highest tracking-tighter opacity-30 select-none uppercase">Restoration</h2>
+                    </div>
+                    <div class="md:col-span-7">
+                        <h3 class="font-headline text-4xl mb-12 italic border-b border-primary/20 pb-4">Strategic Roadmap</h3>
+                        <div id="action-plan" class="space-y-10"></div>
+                    </div>
+                    <div class="md:col-span-5">
+                        <h3 class="font-headline text-4xl mb-12 italic border-b border-primary/20 pb-4">Personalized Tips</h3>
+                        <div id="smart-tips" class="space-y-6"></div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Action Plan -->
-        <div class="module-card">
-            <h3><span style="color: var(--primary)">•</span> Strategic Roadmap (Action Plan)</h3>
-            <div id="action-plan-list" class="recommendation-item" style="display: block; grid-template-columns: none; border-bottom: none;">
-                <!-- Populated by JS -->
+        <!-- Checklist Section -->
+        <section class="px-8 md:px-20 mb-32">
+            <div class="max-w-4xl mx-auto bg-surface-container-low p-12 md:p-20 rounded-lg relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-12 opacity-5">
+                    <span class="material-symbols-outlined text-9xl" data-icon="checklist">checklist</span>
+                </div>
+                <h2 class="font-headline text-4xl md:text-5xl mb-12 italic leading-tight">The Upgrade <span class="text-primary underline decoration-1 underline-offset-8">Protocol</span>.</h2>
+                <div id="checklist" class="space-y-6"></div>
             </div>
-        </div>
+        </section>
 
-        <!-- Smart Tips -->
-        <div class="module-card">
-            <h3><span style="color: var(--secondary)">•</span> Smart Resume Enhancements</h3>
-            <div id="smart-tips-list" class="chip-container">
-                <!-- Populated by JS -->
-            </div>
-        </div>
-
-        <!-- Upgrade Checklist -->
-        <div class="module-card" style="margin-bottom: 4rem;">
-            <h3><span style="color: var(--primary)">•</span> One-Click Resume Upgrade Checklist</h3>
-            <div id="upgrade-checklist" style="display: flex; flex-direction: column; gap: 1rem;">
-                <!-- Populated by JS -->
-            </div>
-        </div>
-
-        <div class="recommendations">
-            <h3 style="margin-bottom: 3rem;">Strategic Enhancements</h3>
-            <div id="recommendations-list"></div>
-        </div>
     </div>
-</div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-[#0d0f0d] w-full py-20 px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+        <div class="font-headline italic text-lg text-primary">Job Skill Gap Analyzer.</div>
+        <div class="flex gap-8">
+            <a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-background/60 hover:text-primary transition-opacity" href="#">Methodology</a>
+            <a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-background/60 hover:text-primary transition-opacity" href="#">Privacy</a>
+            <a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-background/60 hover:text-primary transition-opacity" href="#">Contact</a>
+        </div>
+        <p class="font-label text-[10px] uppercase tracking-[0.2em] text-secondary">
+            © 2026 The Technical Nocturne. Crafted for Precision.
+        </p>
+    </div>
+</footer>
 
 <script>
-    function updateLabel(id) {
-        const file = document.getElementById(id).files[0];
-        const label = document.getElementById(id + "-label");
-        if (file) {
-            label.innerHTML = `<span class="icon">✅</span> ${file.name}`;
-            label.style.color = "var(--primary)";
+    function updateFileName(labelId, input) {
+        const label = document.getElementById(labelId);
+        if (input.files && input.files[0]) {
+            label.innerText = input.files[0].name;
+            label.classList.add('text-on-surface');
+            label.classList.remove('text-primary');
         }
     }
 
-    async function handleAnalyze() {
-        const resumeFile = document.getElementById("resume").files[0];
-        const jdFile = document.getElementById("jd").files[0];
-        const loading = document.getElementById("loading-overlay");
-        const errorMsg = document.getElementById("error-msg");
-        const resultsContainer = document.getElementById("results-container");
+    async function analyzeSkills() {
+        const resumeFile = document.getElementById('resume').files[0];
+        const jdFile = document.getElementById('jd').files[0];
+        const btn = document.getElementById('analyze-btn');
+        const loader = document.getElementById('loader');
 
         if (!resumeFile || !jdFile) {
-            errorMsg.style.display = "block";
+            alert("Please provide both dossiers for analysis.");
             return;
         }
 
-        errorMsg.style.display = "none";
-        loading.style.display = "flex";
-        resultsContainer.style.display = "none";
+        const formData = new FormData();
+        formData.append('resume', resumeFile);
+        formData.append('jd', jdFile);
+
+        btn.disabled = true;
+        loader.classList.remove('hidden');
 
         try {
-            const formData = new FormData();
-            formData.append("resume", resumeFile);
-            formData.append("jd", jdFile);
-
-            const res = await fetch("http://127.0.0.1:5000/analyze", {
-                method: "POST",
+            const response = await fetch('http://127.0.0.1:5000/analyze', {
+                method: 'POST',
                 body: formData
             });
 
-            if (!res.ok) throw new Error("Synthesis failed. Check server connectivity.");
+            const data = await response.json();
 
-            const data = await res.json();
-            displayResults(data);
-
-        } catch (err) {
-            console.error(err);
-            errorMsg.innerText = "Error: " + err.message;
-            errorMsg.style.display = "block";
+            if (data.error) {
+                alert(data.error);
+            } else {
+                displayResults(data);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Convergence interrupted. Ensure the terminal is active.");
         } finally {
-            loading.style.display = "none";
+            btn.disabled = false;
+            loader.classList.add('hidden');
         }
     }
 
     function displayResults(data) {
-        const container = document.getElementById("results-container");
-        container.style.display = "block";
+        document.getElementById('results-section').classList.remove('hidden');
 
-        // Update Score
-        document.getElementById("score-val").innerText = data.score;
-        document.getElementById("score-summary").innerText = 
-            `Analysis identified ${data.summary.matched_count} points of technical convergence within a ${data.summary.total_jd_skills}-point dataset.`;
-        
-        // Matched chips
-        const matchedContainer = document.getElementById("matched-badges");
-        matchedContainer.innerHTML = data.matched.length 
-            ? data.matched.map(s => `<span class="skill-chip matched">${s}</span>`).join("")
-            : `<p style="color: var(--on-surface-variant);">Zero technical convergence detected.</p>`;
+        // Score Animate
+        const scoreVal = document.getElementById('score-val');
+        let startScore = 0;
+        const endScore = data.score;
+        const timer = setInterval(() => {
+            if (startScore >= endScore) clearInterval(timer);
+            scoreVal.innerText = Math.round(startScore);
+            startScore += 1;
+        }, 15);
 
-        // Missing chips
-        const missingContainer = document.getElementById("missing-badges");
-        missingContainer.innerHTML = data.missing.length
-            ? data.missing.map(s => `<span class="skill-chip missing">${s}</span>`).join("")
-            : `<p style="color: var(--on-surface-variant);">No missing technical requirements.</p>`;
+        document.getElementById('match-summary').innerText = 
+            `— ${data.matched.length} Synchronized out of ${data.matched.length + data.missing.length} Requirements`;
+
+        // Badges
+        renderEditorialBadges('matched-badges', data.matched, 'text-secondary bg-secondary/5 border border-secondary/10');
+        renderEditorialBadges('missing-badges', data.missing, 'text-tertiary bg-tertiary/5 border border-tertiary/10');
+
+        // Perspective
+        renderPerspective('strengths-list', data.recruiter_view.strengths);
+        renderPerspective('weaknesses-list', data.recruiter_view.weaknesses);
 
         // Action Plan
-        const actionPlanList = document.getElementById("action-plan-list");
-        actionPlanList.innerHTML = data.action_plan.length
-            ? data.action_plan.map((step, i) => `
-                <div style="margin-bottom: 1.5rem; padding-left: 1.5rem; border-left: 2px solid var(--primary); color: var(--on-surface);">
-                    <span style="color: var(--primary-container); font-weight: 700; font-family: 'Manrope'; margin-right: 1rem;">0${i+1}</span>
-                    ${step}
+        const actionPlan = document.getElementById('action-plan');
+        actionPlan.innerHTML = data.action_plan.map(step => {
+            const parts = step.split(':');
+            return `
+                <div class="group">
+                    <span class="font-label text-[10px] uppercase tracking-widest text-primary block mb-2 opacity-60 group-hover:opacity-100 transition-opacity">${parts[0]}</span>
+                    <p class="font-body text-lg text-on-surface-variant font-light group-hover:text-on-surface transition-colors">${parts[1]}</p>
                 </div>
-            `).join("")
-            : `<p>No action plan required.</p>`;
+            `;
+        }).join('');
 
-        // Smart Tips
-        const smartTipsList = document.getElementById("smart-tips-list");
-        smartTipsList.innerHTML = data.smart_tips.length
-            ? data.smart_tips.map(tip => `
-                <div class="skill-chip" style="border-color: var(--secondary); background: rgba(253, 219, 66, 0.05); color: var(--secondary); min-width: 100%; border-style: dashed; padding: 1.25rem;">
-                    • ${tip}
-                </div>
-            `).join("")
-            : `<p>No additional tips identified.</p>`;
-
-        // Recruiter View
-        document.getElementById("recruiter-strengths").innerHTML = data.recruiter_view.strengths.map(s => `
-            <p style="margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.95rem;">
-                <span style="color: var(--success)">✔</span> ${s}
-            </p>
-        `).join("");
-        
-        document.getElementById("recruiter-weaknesses").innerHTML = data.recruiter_view.weaknesses.map(w => `
-            <p style="margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.95rem;">
-                <span style="color: var(--error)">✘</span> ${w}
-            </p>
-        `).join("");
+        // Tips
+        const tipsContainer = document.getElementById('smart-tips');
+        tipsContainer.innerHTML = data.smart_tips.map(tip => `
+            <div class="p-6 bg-surface-container-low border-l-2 border-primary/20 hover:border-primary transition-all duration-300">
+                <p class="text-on-surface-variant font-light leading-relaxed italic">"${tip}"</p>
+            </div>
+        `).join('');
 
         // Checklist
-        document.getElementById("upgrade-checklist").innerHTML = data.checklist.map(task => `
-            <div class="checklist-item">
-                <div class="checkbox-mock"></div>
-                <span style="font-size: 0.95rem;">${task}</span>
+        const checklist = document.getElementById('checklist');
+        checklist.innerHTML = data.checklist.map(item => `
+            <div class="flex items-center gap-6 group cursor-pointer hover:translate-x-2 transition-transform duration-300">
+                <span class="material-symbols-outlined text-primary/40 group-hover:text-primary transition-colors" data-icon="circle">circle</span>
+                <p class="text-on-surface-variant group-hover:text-on-surface transition-colors">${item}</p>
             </div>
-        `).join("");
+        `).join('');
 
-        // Recommendations
-        const recList = document.getElementById("recommendations-list");
-        recList.innerHTML = data.recommendations.length
-            ? data.recommendations.map(r => `
-                <div class="recommendation-item">
-                    <div class="rec-skill">${r.skill}</div>
-                    <div class="rec-text">${r.suggestion}</div>
-                </div>
-            `).join("")
-            : `<p>Strategic alignment complete. No further enhancements identified.</p>`;
+        // Scroll
+        document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+    }
 
-        container.scrollIntoView({ behavior: 'smooth' });
+    function renderEditorialBadges(id, list, classes) {
+        const container = document.getElementById(id);
+        container.innerHTML = list.length > 0 
+            ? list.map(s => `<span class="px-6 py-2 rounded-full font-label text-[10px] uppercase tracking-widest ${classes}">${s}</span>`).join('')
+            : `<p class="italic text-on-surface-variant opacity-50">None found.</p>`;
+    }
+
+    function renderPerspective(id, list) {
+        const container = document.getElementById(id);
+        container.innerHTML = list.map(item => `
+            <div class="flex gap-4 items-start">
+                <span class="text-primary opacity-50">/</span>
+                <p class="text-on-surface-variant font-light leading-relaxed">${item}</p>
+            </div>
+        `).join('');
     }
 </script>
-
 </body>
 </html>
