@@ -3,238 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skill Gap Analyzer | ATS Optimizer</title>
+    <title>The Precision Architect | Skill Gap Analyzer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4F46E5;
-            --primary-hover: #4338CA;
-            --bg: #F8FAFC;
-            --card-bg: #FFFFFF;
-            --text-main: #1E293B;
-            --text-muted: #64748B;
+            /* Tonal Foundation */
+            --background: #060e20;
+            --surface: #060e20;
+            --surface-container-low: #091328;
+            --surface-container: #0f1930;
+            --surface-container-high: #141f38;
+            --surface-container-highest: #192540;
+            --surface-bright: #1f2b49;
+            --surface-variant: rgba(25, 37, 64, 0.6);
+            
+            /* Action Colors */
+            --primary: #ffdd73;
+            --primary-container: #fbcd16;
+            --primary-dim: #eec200;
+            --secondary: #fddb42;
+            --secondary-container: #6f5d00;
+            
+            /* Text & UI */
+            --on-background: #dee5ff;
+            --on-surface: #dee5ff;
+            --on-surface-variant: #a3aac4;
+            --outline-variant: rgba(109, 117, 140, 0.15);
+            --error: #ff7351;
             --success: #10B981;
-            --danger: #EF4444;
-            --warning: #F59E0B;
-            --border: #E2E8F0;
+            
+            /* Shadows as Glow */
+            --glow-shadow: 0 20px 40px rgba(255, 221, 115, 0.06);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--surface-bright) var(--background);
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
+            background-color: var(--background);
+            color: var(--on-background);
             line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 2rem 1rem;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            padding-bottom: 5rem;
         }
 
-        .container {
-            width: 100%;
-            max-width: 900px;
+        /* Editorial Typography Scale */
+        h1, h2, h3 {
+            font-family: 'Manrope', sans-serif;
+            letter-spacing: -0.02em;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
+        .hero-section {
+            padding: 8rem 8.5rem 5rem 8.5rem; /* Asymmetrical Editorial Spacing */
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-section { padding: 4rem 2rem; }
+        }
+
+        .eyebrow {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: inline-block;
         }
 
         h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        p.subtitle {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
             margin-bottom: 2rem;
-            border: 1px solid var(--border);
+            max-width: 800px;
+            color: var(--on-surface);
         }
 
-        .upload-section {
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--on-surface-variant);
+            max-width: 600px;
+            margin-bottom: 4rem;
+            font-weight: 300;
+        }
+
+        /* The "Precision Primitives" Components */
+        .glass-card {
+            background: var(--surface-container-low);
+            padding: 3rem;
+            border-radius: 1.5rem;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 4rem;
+            box-shadow: var(--glow-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .upload-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
-        @media (max-width: 640px) {
-            .upload-section {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 768px) {
+            .upload-grid { grid-template-columns: 1fr; }
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text-main);
-        }
-
-        input[type="file"] {
-            padding: 0.5rem;
-            border: 2px dashed var(--border);
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-
-        input[type="file"]:hover {
-            border-color: var(--primary);
-        }
-
-        .btn-analyze {
-            width: 100%;
-            padding: 1rem;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 0.75rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-analyze:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-        }
-
-        .btn-analyze:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        /* Results section */
-        #results-container {
-            display: none;
-        }
-
-        .score-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-        }
-
-        .score-visual {
-            position: relative;
-            width: 120px;
-            height: 120px;
-        }
-
-        svg.progress-ring {
-            transform: rotate(-90deg);
-        }
-
-        .progress-ring__circle {
-            transition: stroke-dashoffset 0.35s;
-            transform-origin: 50% 50%;
-        }
-
-        .score-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .skill-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        @media (max-width: 640px) {
-            .skill-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .skill-list-card h3 {
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .badge-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .badge {
-            padding: 0.35rem 0.75rem;
-            border-radius: 2rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .badge-success { background: #DCFCE7; color: #166534; }
-        .badge-danger { background: #FEE2E2; color: #991B1B; }
-
-        .recommendations-list {
-            margin-top: 1rem;
-            display: flex;
-            flex-direction: column;
             gap: 1rem;
         }
 
-        .recommendation-item {
-            padding: 1rem;
-            background: #F1F5F9;
-            border-radius: 0.5rem;
-            border-left: 4px solid var(--primary);
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--on-surface-variant);
         }
 
-        .recommendation-item strong {
+        .file-drop-zone {
+            background-color: var(--surface-container-high);
+            border: 1px solid var(--outline-variant);
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-drop-zone:hover {
+            background-color: var(--surface-container-highest);
+            border-color: var(--primary);
+        }
+
+        input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-label {
             display: block;
-            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+            color: var(--on-surface);
+            pointer-events: none;
+        }
+
+        .file-label .icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Buttons: The "Glass & Gradient" Rule */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-container));
+            color: #000;
+            border: none;
+            padding: 1.25rem 2.5rem;
+            border-radius: 9999px; /* Pill shape */
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: fit-content;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 221, 115, 0.2);
+            filter: brightness(1.1);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Results Grid */
+        #results-container {
+            display: none;
+            padding-top: 5rem;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 4rem;
+        }
+
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .score-val {
+            font-family: 'Manrope', sans-serif;
+            font-size: 8rem;
+            font-weight: 800;
+            line-height: 1;
             color: var(--primary);
         }
 
-        /* Loading Spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
+        .score-meta {
+            max-width: 300px;
+        }
+
+        .score-meta h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Skill Modules */
+        .skill-modules {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (max-width: 900px) {
+            .skill-modules { grid-template-columns: 1fr; }
+        }
+
+        .module-card {
+            background: var(--surface-container-low);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+        }
+
+        .module-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--on-surface-variant);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .skill-chip {
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: var(--surface-container-highest);
+            color: var(--on-surface);
+            border: 1px solid var(--outline-variant);
+            transition: all 0.2s ease;
+        }
+
+        .skill-chip.matched {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .skill-chip.missing {
+            background: rgba(255, 115, 81, 0.1);
+            color: var(--error);
+            border-color: rgba(255, 115, 81, 0.2);
+        }
+
+        /* Recommendations: Editorial List */
+        .recommendations {
+            background: var(--surface-container-low);
+            padding: 4rem;
+            border-radius: 1.5rem;
+        }
+
+        .recommendation-item {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--outline-variant);
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2rem;
+        }
+
+        .recommendation-item:last-child { border-bottom: none; }
+
+        .rec-skill {
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .rec-text {
+            color: var(--on-surface-variant);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(6, 14, 32, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
             display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--surface-container-highest);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
@@ -243,85 +359,95 @@
 
         #error-msg {
             display: none;
-            color: var(--danger);
+            color: var(--error);
+            margin-top: 2rem;
             text-align: center;
-            margin-top: 1rem;
-            font-weight: 600;
+            font-weight: 500;
         }
 
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>Job Skill Gap Analyzer</h1>
-        <p class="subtitle">Optimize your resume for applicant tracking systems.</p>
-    </header>
+<div class="loading-overlay" id="loading-overlay">
+    <div class="loader"></div>
+    <p style="font-family: 'Manrope'; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">Synthesizing Analysis...</p>
+</div>
 
-    <div class="card">
-        <div class="upload-section">
+<div class="hero-section">
+    <span class="eyebrow">The Precision Architect</span>
+    <h1>Optimize Your Career Path With Mathematical Precision</h1>
+    <p class="subtitle">Extracting deep insights from your resume to align with high-performance job descriptions.</p>
+
+    <div class="glass-card">
+        <div class="upload-grid">
             <div class="input-group">
-                <label for="resume">Your Resume (PDF)</label>
-                <input type="file" id="resume" accept=".pdf">
+                <label>Professional Dossier (Resume PDF)</label>
+                <div class="file-drop-zone">
+                    <span class="file-label" id="resume-label"><span class="icon">📄</span>Drop or select PDF</span>
+                    <input type="file" id="resume" accept=".pdf" onchange="updateLabel('resume')">
+                </div>
             </div>
             <div class="input-group">
-                <label for="jd">Job Description (PDF)</label>
-                <input type="file" id="jd" accept=".pdf">
+                <label>Target Specification (Job PDF)</label>
+                <div class="file-drop-zone">
+                    <span class="file-label" id="jd-label"><span class="icon">💼</span>Drop or select PDF</span>
+                    <input type="file" id="jd" accept=".pdf" onchange="updateLabel('jd')">
+                </div>
             </div>
         </div>
         
-        <button id="analyze-btn" class="btn-analyze" onclick="handleAnalyze()">
-            <span class="spinner" id="spinner"></span>
-            <span id="btn-text">Analyze Skills</span>
+        <button id="analyze-btn" class="btn-primary" onclick="handleAnalyze()">
+            Analyze Skill Gap
         </button>
 
-        <div id="error-msg">Please upload both files to continue.</div>
+        <div id="error-msg">Integration requires both specification files.</div>
     </div>
 
-    <!-- Results Section -->
+    <!-- Results Container -->
     <div id="results-container">
-        <div class="card">
-            <div class="score-card">
-                <div>
-                    <h2>ATS Compatibility Score</h2>
-                    <p id="score-summary" style="color: var(--text-muted);"></p>
-                </div>
-                <div class="score-visual">
-                    <svg class="progress-ring" width="120" height="120">
-                        <circle class="progress-ring__background" stroke="#E2E8F0" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
-                        <circle id="progress-circle" class="progress-ring__circle" stroke="var(--primary)" stroke-width="8" stroke-dasharray="326.72" stroke-dashoffset="326.72" fill="transparent" r="52" cx="60" cy="60"/>
-                    </svg>
-                    <div class="score-text" id="score-val">0%</div>
+        <div class="results-header">
+            <div class="score-display">
+                <div class="score-val" id="score-val">0</div>
+                <div class="score-meta">
+                    <h2>% Match Score</h2>
+                    <p id="score-summary" style="color: var(--on-surface-variant);"></p>
                 </div>
             </div>
         </div>
 
-        <div class="skill-grid">
-            <div class="card skill-list-card">
-                <h3><span style="color: var(--success)">✓</span> Matched Skills</h3>
-                <div id="matched-badges" class="badge-container"></div>
+        <div class="skill-modules">
+            <div class="module-card">
+                <h3><span style="color: var(--success)">•</span> Synchronized Skills</h3>
+                <div id="matched-badges" class="chip-container"></div>
             </div>
-            <div class="card skill-list-card">
-                <h3><span style="color: var(--danger)">✗</span> Missing Skills</h3>
-                <div id="missing-badges" class="badge-container"></div>
+            <div class="module-card">
+                <h3><span style="color: var(--error)">•</span> Divergent Skills</h3>
+                <div id="missing-badges" class="chip-container"></div>
             </div>
         </div>
 
-        <div class="card">
-            <h3>Personalized Recommendations</h3>
-            <div id="recommendations-list" class="recommendations-list"></div>
+        <div class="recommendations">
+            <h3 style="margin-bottom: 3rem;">Strategic Enhancements</h3>
+            <div id="recommendations-list"></div>
         </div>
     </div>
 </div>
 
 <script>
+    function updateLabel(id) {
+        const file = document.getElementById(id).files[0];
+        const label = document.getElementById(id + "-label");
+        if (file) {
+            label.innerHTML = `<span class="icon">✅</span> ${file.name}`;
+            label.style.color = "var(--primary)";
+        }
+    }
+
     async function handleAnalyze() {
         const resumeFile = document.getElementById("resume").files[0];
         const jdFile = document.getElementById("jd").files[0];
-        const btn = document.getElementById("analyze-btn");
-        const btnText = document.getElementById("btn-text");
-        const spinner = document.getElementById("spinner");
+        const loading = document.getElementById("loading-overlay");
         const errorMsg = document.getElementById("error-msg");
         const resultsContainer = document.getElementById("results-container");
 
@@ -331,9 +457,7 @@
         }
 
         errorMsg.style.display = "none";
-        btn.disabled = true;
-        btnText.innerText = "Analyzing...";
-        spinner.style.display = "block";
+        loading.style.display = "flex";
         resultsContainer.style.display = "none";
 
         try {
@@ -346,7 +470,7 @@
                 body: formData
             });
 
-            if (!res.ok) throw new Error("Failed to analyze files");
+            if (!res.ok) throw new Error("Synthesis failed. Check server connectivity.");
 
             const data = await res.json();
             displayResults(data);
@@ -356,9 +480,7 @@
             errorMsg.innerText = "Error: " + err.message;
             errorMsg.style.display = "block";
         } finally {
-            btn.disabled = false;
-            btnText.innerText = "Analyze Skills";
-            spinner.style.display = "none";
+            loading.style.display = "none";
         }
     }
 
@@ -367,45 +489,32 @@
         container.style.display = "block";
 
         // Update Score
-        document.getElementById("score-val").innerText = data.score + "%";
+        document.getElementById("score-val").innerText = data.score;
         document.getElementById("score-summary").innerText = 
-            `We found ${data.summary.matched_count} matches out of ${data.summary.total_jd_skills} required skills.`;
+            `Analysis identified ${data.summary.matched_count} points of technical convergence within a ${data.summary.total_jd_skills}-point dataset.`;
         
-        // Progress Ring
-        const circle = document.getElementById("progress-circle");
-        const radius = circle.r.baseVal.value;
-        const circumference = 2 * Math.PI * radius;
-        const offset = circumference - (data.score / 100) * circumference;
-        circle.style.strokeDasharray = `${circumference} ${circumference}`;
-        circle.style.strokeDashoffset = offset;
-
-        // Change color based on score
-        if (data.score < 40) circle.style.stroke = "var(--danger)";
-        else if (data.score < 70) circle.style.stroke = "var(--warning)";
-        else circle.style.stroke = "var(--success)";
-
-        // Matched Badges
+        // Matched chips
         const matchedContainer = document.getElementById("matched-badges");
         matchedContainer.innerHTML = data.matched.length 
-            ? data.matched.map(s => `<span class="badge badge-success">${s}</span>`).join("")
-            : `<p style="color: var(--text-muted); font-size: 0.9rem;">No matches found.</p>`;
+            ? data.matched.map(s => `<span class="skill-chip matched">${s}</span>`).join("")
+            : `<p style="color: var(--on-surface-variant);">Zero technical convergence detected.</p>`;
 
-        // Missing Badges
+        // Missing chips
         const missingContainer = document.getElementById("missing-badges");
         missingContainer.innerHTML = data.missing.length
-            ? data.missing.map(s => `<span class="badge badge-danger">${s}</span>`).join("")
-            : `<p style="color: var(--text-muted); font-size: 0.9rem;">No missing skills!</p>`;
+            ? data.missing.map(s => `<span class="skill-chip missing">${s}</span>`).join("")
+            : `<p style="color: var(--on-surface-variant);">No missing technical requirements.</p>`;
 
         // Recommendations
         const recList = document.getElementById("recommendations-list");
         recList.innerHTML = data.recommendations.length
             ? data.recommendations.map(r => `
                 <div class="recommendation-item">
-                    <strong>${r.skill}</strong>
-                    <p style="font-size: 0.95rem; color: var(--text-muted);">${r.suggestion}</p>
+                    <div class="rec-skill">${r.skill}</div>
+                    <div class="rec-text">${r.suggestion}</div>
                 </div>
             `).join("")
-            : `<p>Awesome! You have all the required skills mentioned in the job description.</p>`;
+            : `<p>Strategic alignment complete. No further enhancements identified.</p>`;
 
         container.scrollIntoView({ behavior: 'smooth' });
     }
