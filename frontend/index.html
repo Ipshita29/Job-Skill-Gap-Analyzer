@@ -1,11 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Skill Gap Analyzer</title>
 </head>
 <body>
-    
+
+<h2>Upload Resume & Job Description</h2>
+
+<input type="file" id="resume"><br><br>
+<input type="file" id="jd"><br><br>
+
+<button onclick="sendData()">Analyze</button>
+
+<h3>Result:</h3>
+<pre id="result"></pre>
+
+<script>
+async function sendData() {
+    const resume = document.getElementById("resume").files[0];
+    const jd = document.getElementById("jd").files[0];
+
+    let formData = new FormData();
+    formData.append("resume", resume);
+    formData.append("jd", jd);
+
+    const res = await fetch("http://127.0.0.1:5000/analyze", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await res.json();
+
+    document.getElementById("result").innerText =
+        "Matched Skills: " + data.matched + "\n\n" +
+        "Missing Skills: " + data.missing + "\n\n" +
+        "ATS Score: " + data.score + "%\n\n" +
+        "Suggestions:\n" + JSON.stringify(data.recommendations, null, 2);
+}
+</script>
+
 </body>
 </html>
