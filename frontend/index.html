@@ -249,7 +249,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2rem;
-            margin-bottom: 4rem;
+            margin-bottom: 2rem;
         }
 
         @media (max-width: 900px) {
@@ -260,6 +260,7 @@
             background: var(--surface-container-low);
             padding: 2.5rem;
             border-radius: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .module-card h3 {
@@ -328,6 +329,35 @@
 
         .rec-text {
             color: var(--on-surface-variant);
+        }
+
+        /* Checkbox Style for Task List */
+        .checklist-item {
+            background: var(--surface-container-high);
+            padding: 1.25rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid var(--outline-variant);
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            border-color: var(--primary);
+            background: var(--surface-container-highest);
+        }
+
+        .checkbox-mock {
+            width: 22px;
+            height: 22px;
+            border: 2.5px solid var(--primary);
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
         }
 
         /* Loading Overlay */
@@ -427,6 +457,45 @@
             </div>
         </div>
 
+        <div class="skill-modules">
+            <div class="module-card">
+                <h3><span style="color: var(--success)">•</span> Recruiter View: Strengths</h3>
+                <div id="recruiter-strengths" style="color: var(--on-surface-variant);">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            <div class="module-card">
+                <h3><span style="color: var(--error)">•</span> Recruiter View: Weaknesses</h3>
+                <div id="recruiter-weaknesses" style="color: var(--on-surface-variant);">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Plan -->
+        <div class="module-card">
+            <h3><span style="color: var(--primary)">•</span> Strategic Roadmap (Action Plan)</h3>
+            <div id="action-plan-list" class="recommendation-item" style="display: block; grid-template-columns: none; border-bottom: none;">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Smart Tips -->
+        <div class="module-card">
+            <h3><span style="color: var(--secondary)">•</span> Smart Resume Enhancements</h3>
+            <div id="smart-tips-list" class="chip-container">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- Upgrade Checklist -->
+        <div class="module-card" style="margin-bottom: 4rem;">
+            <h3><span style="color: var(--primary)">•</span> One-Click Resume Upgrade Checklist</h3>
+            <div id="upgrade-checklist" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
         <div class="recommendations">
             <h3 style="margin-bottom: 3rem;">Strategic Enhancements</h3>
             <div id="recommendations-list"></div>
@@ -504,6 +573,48 @@
         missingContainer.innerHTML = data.missing.length
             ? data.missing.map(s => `<span class="skill-chip missing">${s}</span>`).join("")
             : `<p style="color: var(--on-surface-variant);">No missing technical requirements.</p>`;
+
+        // Action Plan
+        const actionPlanList = document.getElementById("action-plan-list");
+        actionPlanList.innerHTML = data.action_plan.length
+            ? data.action_plan.map((step, i) => `
+                <div style="margin-bottom: 1.5rem; padding-left: 1.5rem; border-left: 2px solid var(--primary); color: var(--on-surface);">
+                    <span style="color: var(--primary-container); font-weight: 700; font-family: 'Manrope'; margin-right: 1rem;">0${i+1}</span>
+                    ${step}
+                </div>
+            `).join("")
+            : `<p>No action plan required.</p>`;
+
+        // Smart Tips
+        const smartTipsList = document.getElementById("smart-tips-list");
+        smartTipsList.innerHTML = data.smart_tips.length
+            ? data.smart_tips.map(tip => `
+                <div class="skill-chip" style="border-color: var(--secondary); background: rgba(253, 219, 66, 0.05); color: var(--secondary); min-width: 100%; border-style: dashed; padding: 1.25rem;">
+                    • ${tip}
+                </div>
+            `).join("")
+            : `<p>No additional tips identified.</p>`;
+
+        // Recruiter View
+        document.getElementById("recruiter-strengths").innerHTML = data.recruiter_view.strengths.map(s => `
+            <p style="margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.95rem;">
+                <span style="color: var(--success)">✔</span> ${s}
+            </p>
+        `).join("");
+        
+        document.getElementById("recruiter-weaknesses").innerHTML = data.recruiter_view.weaknesses.map(w => `
+            <p style="margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.95rem;">
+                <span style="color: var(--error)">✘</span> ${w}
+            </p>
+        `).join("");
+
+        // Checklist
+        document.getElementById("upgrade-checklist").innerHTML = data.checklist.map(task => `
+            <div class="checklist-item">
+                <div class="checkbox-mock"></div>
+                <span style="font-size: 0.95rem;">${task}</span>
+            </div>
+        `).join("");
 
         // Recommendations
         const recList = document.getElementById("recommendations-list");
