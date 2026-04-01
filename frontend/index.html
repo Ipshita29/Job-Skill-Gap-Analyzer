@@ -1,42 +1,414 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Skill Gap Analyzer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Gap Analyzer | ATS Optimizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --border: #E2E8F0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .upload-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .upload-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        input[type="file"] {
+            padding: 0.5rem;
+            border: 2px dashed var(--border);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--primary);
+        }
+
+        .btn-analyze {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-analyze:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-analyze:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Results section */
+        #results-container {
+            display: none;
+        }
+
+        .score-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .score-visual {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        svg.progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform-origin: 50% 50%;
+        }
+
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .skill-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .skill-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .skill-list-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-success { background: #DCFCE7; color: #166534; }
+        .badge-danger { background: #FEE2E2; color: #991B1B; }
+
+        .recommendations-list {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .recommendation-item {
+            padding: 1rem;
+            background: #F1F5F9;
+            border-radius: 0.5rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .recommendation-item strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--primary);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #error-msg {
+            display: none;
+            color: var(--danger);
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+    </style>
 </head>
 <body>
 
-<h2>Upload Resume & Job Description</h2>
+<div class="container">
+    <header>
+        <h1>Job Skill Gap Analyzer</h1>
+        <p class="subtitle">Optimize your resume for applicant tracking systems.</p>
+    </header>
 
-<input type="file" id="resume"><br><br>
-<input type="file" id="jd"><br><br>
+    <div class="card">
+        <div class="upload-section">
+            <div class="input-group">
+                <label for="resume">Your Resume (PDF)</label>
+                <input type="file" id="resume" accept=".pdf">
+            </div>
+            <div class="input-group">
+                <label for="jd">Job Description (PDF)</label>
+                <input type="file" id="jd" accept=".pdf">
+            </div>
+        </div>
+        
+        <button id="analyze-btn" class="btn-analyze" onclick="handleAnalyze()">
+            <span class="spinner" id="spinner"></span>
+            <span id="btn-text">Analyze Skills</span>
+        </button>
 
-<button onclick="sendData()">Analyze</button>
+        <div id="error-msg">Please upload both files to continue.</div>
+    </div>
 
-<h3>Result:</h3>
-<pre id="result"></pre>
+    <!-- Results Section -->
+    <div id="results-container">
+        <div class="card">
+            <div class="score-card">
+                <div>
+                    <h2>ATS Compatibility Score</h2>
+                    <p id="score-summary" style="color: var(--text-muted);"></p>
+                </div>
+                <div class="score-visual">
+                    <svg class="progress-ring" width="120" height="120">
+                        <circle class="progress-ring__background" stroke="#E2E8F0" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                        <circle id="progress-circle" class="progress-ring__circle" stroke="var(--primary)" stroke-width="8" stroke-dasharray="326.72" stroke-dashoffset="326.72" fill="transparent" r="52" cx="60" cy="60"/>
+                    </svg>
+                    <div class="score-text" id="score-val">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="skill-grid">
+            <div class="card skill-list-card">
+                <h3><span style="color: var(--success)">✓</span> Matched Skills</h3>
+                <div id="matched-badges" class="badge-container"></div>
+            </div>
+            <div class="card skill-list-card">
+                <h3><span style="color: var(--danger)">✗</span> Missing Skills</h3>
+                <div id="missing-badges" class="badge-container"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Personalized Recommendations</h3>
+            <div id="recommendations-list" class="recommendations-list"></div>
+        </div>
+    </div>
+</div>
 
 <script>
-async function sendData() {
-    const resume = document.getElementById("resume").files[0];
-    const jd = document.getElementById("jd").files[0];
+    async function handleAnalyze() {
+        const resumeFile = document.getElementById("resume").files[0];
+        const jdFile = document.getElementById("jd").files[0];
+        const btn = document.getElementById("analyze-btn");
+        const btnText = document.getElementById("btn-text");
+        const spinner = document.getElementById("spinner");
+        const errorMsg = document.getElementById("error-msg");
+        const resultsContainer = document.getElementById("results-container");
 
-    let formData = new FormData();
-    formData.append("resume", resume);
-    formData.append("jd", jd);
+        if (!resumeFile || !jdFile) {
+            errorMsg.style.display = "block";
+            return;
+        }
 
-    const res = await fetch("http://127.0.0.1:5000/analyze", {
-        method: "POST",
-        body: formData
-    });
+        errorMsg.style.display = "none";
+        btn.disabled = true;
+        btnText.innerText = "Analyzing...";
+        spinner.style.display = "block";
+        resultsContainer.style.display = "none";
 
-    const data = await res.json();
+        try {
+            const formData = new FormData();
+            formData.append("resume", resumeFile);
+            formData.append("jd", jdFile);
 
-    document.getElementById("result").innerText =
-        "Matched Skills: " + data.matched + "\n\n" +
-        "Missing Skills: " + data.missing + "\n\n" +
-        "ATS Score: " + data.score + "%\n\n" +
-        "Suggestions:\n" + JSON.stringify(data.recommendations, null, 2);
-}
+            const res = await fetch("http://127.0.0.1:5000/analyze", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!res.ok) throw new Error("Failed to analyze files");
+
+            const data = await res.json();
+            displayResults(data);
+
+        } catch (err) {
+            console.error(err);
+            errorMsg.innerText = "Error: " + err.message;
+            errorMsg.style.display = "block";
+        } finally {
+            btn.disabled = false;
+            btnText.innerText = "Analyze Skills";
+            spinner.style.display = "none";
+        }
+    }
+
+    function displayResults(data) {
+        const container = document.getElementById("results-container");
+        container.style.display = "block";
+
+        // Update Score
+        document.getElementById("score-val").innerText = data.score + "%";
+        document.getElementById("score-summary").innerText = 
+            `We found ${data.summary.matched_count} matches out of ${data.summary.total_jd_skills} required skills.`;
+        
+        // Progress Ring
+        const circle = document.getElementById("progress-circle");
+        const radius = circle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (data.score / 100) * circumference;
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = offset;
+
+        // Change color based on score
+        if (data.score < 40) circle.style.stroke = "var(--danger)";
+        else if (data.score < 70) circle.style.stroke = "var(--warning)";
+        else circle.style.stroke = "var(--success)";
+
+        // Matched Badges
+        const matchedContainer = document.getElementById("matched-badges");
+        matchedContainer.innerHTML = data.matched.length 
+            ? data.matched.map(s => `<span class="badge badge-success">${s}</span>`).join("")
+            : `<p style="color: var(--text-muted); font-size: 0.9rem;">No matches found.</p>`;
+
+        // Missing Badges
+        const missingContainer = document.getElementById("missing-badges");
+        missingContainer.innerHTML = data.missing.length
+            ? data.missing.map(s => `<span class="badge badge-danger">${s}</span>`).join("")
+            : `<p style="color: var(--text-muted); font-size: 0.9rem;">No missing skills!</p>`;
+
+        // Recommendations
+        const recList = document.getElementById("recommendations-list");
+        recList.innerHTML = data.recommendations.length
+            ? data.recommendations.map(r => `
+                <div class="recommendation-item">
+                    <strong>${r.skill}</strong>
+                    <p style="font-size: 0.95rem; color: var(--text-muted);">${r.suggestion}</p>
+                </div>
+            `).join("")
+            : `<p>Awesome! You have all the required skills mentioned in the job description.</p>`;
+
+        container.scrollIntoView({ behavior: 'smooth' });
+    }
 </script>
 
 </body>
