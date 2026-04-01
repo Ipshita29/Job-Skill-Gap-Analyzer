@@ -2,66 +2,48 @@ from sentence_transformers import SentenceTransformer, util
 import numpy as np
 from model import extract_skills_ml
 
-# Initialise SBERT (MiniLM is small and fast)
-sbert_model = SentenceTransformer('all-MiniLM-L6-v2')
-
-dataset_embeddings = None
-raw_dataset_df = None
+model = SentenceTransformer('all-MiniLM-L6-v2')
+dataset = None
+embeddings = None
 
 def init_recommender(df):
-    """
-    Precomputes embeddings for the dataset once on startup.
-    """
-    global dataset_embeddings, raw_dataset_df
-    raw_dataset_df = df
-    
-    if df is not None:
-        texts = df["resume_text"].tolist()
-        dataset_embeddings = sbert_model.encode(texts, convert_to_tensor=True)
-        print("SBERT Embeddings Precomputed.")
+    global dataset, embeddings
+    dataset = df
+    texts = df["resume_text"].tolist()
+    # make embeddings
+    embeddings = model.encode(texts, convert_to_tensor=True)
 
-def get_ai_recommendations(user_resume_text, jd_text):
-    """
-    Finds similar profiles and suggests missing skills.
-    """
-    if dataset_embeddings is None or raw_dataset_df is None:
+def get_ai_recommendations(user_text, jd_text):
+    if embeddings is None:
         return []
 
-    # 1. Detect Role: Find top 5 profiles most similar to the Job Description
-    jd_embedding = sbert_model.encode(jd_text, convert_to_tensor=True)
-    jd_similarities = util.cos_sim(jd_embedding, dataset_embeddings)[0]
-    top_5_indices = np.argsort(-jd_similarities.cpu().numpy())[:5]
-    
-    # 2. Match Peer: Find top 3 from those 5 most similar to the user's resume
-    user_embedding = sbert_model.encode(user_resume_text, convert_to_tensor=True)
-    top_5_embeddings = dataset_embeddings[top_5_indices]
-    
-    user_similarities = util.cos_sim(user_embedding, top_5_embeddings)[0]
-    top_3_sub_indices = np.argsort(-user_similarities.cpu().numpy())[:3]
-    
-    # 3. Dynamic Skills: Get skills from these peers using our ML model
-    top_3_final_indices = [top_5_indices[i] for i in top_3_sub_indices]
-    user_skills = set(extract_skills_ml(user_resume_text))
-    
-    suggested_skills = []
-    for idx in top_3_final_indices:
-        peer_text = raw_dataset_df.iloc[idx]["resume_text"]
-        peer_skills = extract_skills_ml(peer_text)
-        
-        for skill in peer_skills:
-            if skill not in user_skills:
-                suggested_skills.append(skill)
-    
-    # Deduplicate and limit
-    final_list = list(set(suggested_skills))[:5]
-    
-    return [{"skill": s, "suggestion": f"Based on top profiles for this role, add {s}."} for s in final_list]
+    # JD → find similar resumes
+    jd_emb = model.encode(jd_text, convert_to_tensor=True)
+    scores = util.cos_sim(jd_emb, embeddings)[0]
+    top5 = np.argsort(-scores.cpu().numpy())[:5]
 
-def compute_similarity_score(text1, text2):
-    """
-    Returns semantic similarity as a percentage.
-    """
-    emb1 = sbert_model.encode(text1, convert_to_tensor=True)
-    emb2 = sbert_model.encode(text2, convert_to_tensor=True)
-    similarity = util.cos_sim(emb1, emb2)
-    return int(float(similarity.item()) * 100)
+    # user → compare with those
+    user_emb = model.encode(user_text, convert_to_tensor=True)
+    scores2 = util.cos_sim(user_emb, embeddings[top5])[0]
+    top3 = np.argsort(-scores2.cpu().numpy())[:3]
+
+    # get skills
+    user_skills = set(extract_skills_ml(user_text))
+    suggestions = []
+    for i in top3:
+        text = dataset.iloc[top5[i]]["resume_text"]
+        skills = extract_skills_ml(text)
+        for s in skills:
+            if s not in user_skills:
+                suggestions.append(s)
+    suggestions = list(set(suggestions))[:5]
+    return [
+        {"skill": s, "suggestion": f"Try adding {s} to your profile"}
+        for s in suggestions
+    ]
+
+def compute_similarity_score(t1, t2):
+    e1 = model.encode(t1, convert_to_tensor=True)
+    e2 = model.encode(t2, convert_to_tensor=True)
+    score = util.cos_sim(e1, e2).item()
+    return int(score * 100)

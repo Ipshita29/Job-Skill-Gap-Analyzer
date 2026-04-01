@@ -1,7 +1,7 @@
 from PyPDF2 import PdfReader
 import os
 from model import init_ml, extract_skills_ml
-from recommender import init_recommender, compute_sbert_score, get_ai_recommendations
+from recommender import init_recommender, compute_similarity_score, get_ai_recommendations
 
 # --- STARTUP INITIALIZATION ---
 # This ensures the model is trained in-memory when the backend is loaded.
@@ -28,20 +28,17 @@ def extract_text_from_pdf(file):
         print(f"Error extracting PDF: {e}")
         return ""
 
-# ---------------- MAIN ANALYSIS ---------------- #
+#analysis part 
 
 def analyze(resume_text, jd_text):
-    # 1. Skill Extraction using Trained In-Memory Model
     resume_skills = extract_skills_ml(resume_text)
     jd_skills = extract_skills_ml(jd_text)
 
     matched = sorted(list(set(resume_skills) & set(jd_skills)))
     missing = sorted(list(set(jd_skills) - set(resume_skills)))
 
-    # 2. IA Scoring (Semantic SBERT Similarity)
-    score = int(compute_sbert_score(resume_text, jd_text))
-
-    # 3. Dynamic Data-Driven Recommendations
+    # IA Scoring (Semantic SBERT Similarity)
+    score = int(compute_similarity_score(resume_text, jd_text))
     recommendations = get_ai_recommendations(resume_text, jd_text)
 
     return {
