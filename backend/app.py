@@ -1,3 +1,6 @@
+import os
+import sys
+sys.path.insert(0, os.path.dirname(__file__))
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from utils import extract_text_from_pdf, analyze
