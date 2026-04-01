@@ -1,12 +1,14 @@
 from PyPDF2 import PdfReader
 import csv
 import re
+import os
 
 # reads from skills.csv and store them in a list 
 
 def load_skills():
     skills = []
-    with open("skills.csv", "r") as file:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(base_dir, "skills.csv"), "r") as file:
         reader = csv.DictReader(file)
         for row in reader:
             skills.append(row["skill"].lower())

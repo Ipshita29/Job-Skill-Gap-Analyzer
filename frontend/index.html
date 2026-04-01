@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Job Skill Gap Analyzer | Botanical Nocturne</title>
+    <title>Job Skill Gap Analyzer</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;600&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -87,12 +87,6 @@
     <div class="hidden md:flex items-center gap-10">
         <a class="text-on-surface hover:text-primary transition-colors duration-300 font-label text-[10px] uppercase tracking-[0.2em]" href="#hero">Analysis</a>
         <a class="text-on-surface hover:text-primary transition-colors duration-300 font-label text-[10px] uppercase tracking-[0.2em]" href="#results-section">Results</a>
-        <a class="text-on-surface hover:text-primary transition-colors duration-300 font-label text-[10px] uppercase tracking-[0.2em]" href="#">Documentation</a>
-    </div>
-    <div class="flex items-center gap-6">
-        <button class="text-primary hover:scale-110 duration-200">
-            <span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
-        </button>
     </div>
 </nav>
 
@@ -102,14 +96,14 @@
     <section id="hero" class="px-8 md:px-20 mb-32">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
             <div class="md:col-span-8">
-                <span class="font-headline italic text-primary text-xl md:text-2xl mb-6 block">/01 Convergence</span>
-                <h1 class="font-headline text-5xl md:text-8xl leading-[1.1] tracking-tight text-on-surface">
-                    The <span class="italic text-primary">Technical</span> <br/> Nocturne.
+                <span class="font-headline italic text-primary text-xl md:text-2xl mb-6 block">/01 Skill Evaluation</span>
+                <h1 class="font-headline text-5xl md:text-7xl leading-[1.1] tracking-tight text-on-surface">
+                    Understand Your <span class="italic text-primary">Skills</span> <br/> & Improve Your Resume.
                 </h1>
             </div>
             <div class="md:col-span-4 pb-4">
                 <p class="font-body text-on-surface-variant text-lg leading-relaxed max-w-sm">
-                    A curation of skill sets that flourish in complexity. We evaluate the quiet depth of your professional history against the demands of tomorrow.
+                    Upload your resume and job description to instantly analyze your skill match, identify gaps, and get actionable suggestions to improve your chances.
                 </p>
             </div>
         </div>
@@ -119,21 +113,21 @@
     <section class="mb-40 px-8 md:px-20">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
             <div class="group relative bg-surface-container hover:bg-surface-container-high p-12 rounded-lg transition-all duration-500 border border-outline-variant/10">
-                <h2 class="font-headline text-3xl mb-4 italic">Professional Dossier</h2>
-                <p class="text-on-surface-variant mb-8 font-light">Upload your career narrative in PDF format.</p>
+                <h2 class="font-headline text-3xl mb-4 italic">Upload Resume</h2>
+                <p class="text-on-surface-variant mb-8 font-light">Upload your resume in PDF format.</p>
                 <input type="file" id="resume" accept=".pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="updateFileName('resume-label', this)">
                 <div id="resume-label" class="text-xs uppercase tracking-widest text-primary border-b border-primary/30 inline-block pb-1">Select File</div>
             </div>
             <div class="group relative bg-surface-container hover:bg-surface-container-high p-12 rounded-lg transition-all duration-500 border border-outline-variant/10">
-                <h2 class="font-headline text-3xl mb-4 italic">Target Specification</h2>
-                <p class="text-on-surface-variant mb-8 font-light">Provide the parameters of your next destination.</p>
+                <h2 class="font-headline text-3xl mb-4 italic">Upload Job Description</h2>
+                <p class="text-on-surface-variant mb-8 font-light">Upload the job description you want to analyze..</p>
                 <input type="file" id="jd" accept=".pdf" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="updateFileName('jd-label', this)">
                 <div id="jd-label" class="text-xs uppercase tracking-widest text-primary border-b border-primary/30 inline-block pb-1">Select File</div>
             </div>
         </div>
         <div class="max-w-7xl mx-auto mt-12 text-center">
             <button id="analyze-btn" onclick="analyzeSkills()" class="px-12 py-5 bg-gradient-to-r from-primary to-primary-container text-on-primary font-label text-xs uppercase tracking-[0.3em] rounded-md hover:opacity-90 transition-all duration-300 shadow-xl shadow-primary/10">
-                Initiate Analysis
+                Analyze Resume
             </button>
         </div>
     </section>
@@ -141,7 +135,7 @@
     <!-- Loading Overlay -->
     <div id="loader" class="hidden fixed inset-0 z-50 bg-surface/95 backdrop-blur-md flex flex-col items-center justify-center">
         <span class="material-symbols-outlined text-primary text-6xl animate-pulse mb-6" data-icon="hourglass_empty">hourglass_empty</span>
-        <p class="font-headline text-2xl italic text-on-surface animate-pulse">Synthesizing Technical Convergence...</p>
+        <p class="font-headline text-2xl italic text-on-surface animate-pulse">Analyzing your resume and job match...</p>
     </div>
 
     <!-- Results Section -->
@@ -150,7 +144,7 @@
         <!-- Score Block -->
         <section class="bg-surface-container-low py-32 px-8 md:px-20 mb-40">
             <div class="max-w-4xl mx-auto text-center">
-                <span class="material-symbols-outlined text-primary-container text-6xl mb-8 block" data-icon="equalizer">equalizer</span>
+                <span class="material-symbols-outlined text-primary-container text-6xl mb-8 block" data-icon="equalizer">analytics</span>
                 <blockquote class="font-headline text-5xl md:text-8xl italic leading-relaxed text-on-surface mb-6">
                     <span id="score-val" class="text-primary">0</span>%
                 </blockquote>
@@ -163,8 +157,8 @@
             <div class="max-w-7xl mx-auto">
                 <div class="flex justify-between items-end mb-16 border-b border-outline-variant/10 pb-8">
                     <div>
-                        <span class="font-headline italic text-primary text-xl md:text-2xl mb-2 block">/02 Curation</span>
-                        <h2 class="font-headline text-4xl md:text-6xl tracking-tight">The Divergence.</h2>
+                        <span class="font-headline italic text-primary text-xl md:text-2xl mb-2 block">/02 Skill Analysis</span>
+                        <h2 class="font-headline text-4xl md:text-6xl tracking-tight">Skill Gap Overview.</h2>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -186,7 +180,7 @@
                 <div class="w-full md:w-1/3">
                     <span class="font-headline italic text-primary text-xl block mb-6">/03 Perspective</span>
                     <h2 class="font-headline text-4xl mb-8 leading-tight">The <span class="italic">Recruiter's</span> Gaze.</h2>
-                    <p class="text-on-surface-variant font-light leading-relaxed">Evaluation through a lens of pragmatic necessity and industry standards.</p>
+                    <p class="text-on-surface-variant font-light leading-relaxed">These are the key skills missing from your resume based on the job requirements.</p>
                 </div>
                 <div class="w-full md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div class="bg-surface-container p-8 rounded-lg border border-secondary/10">
@@ -194,7 +188,7 @@
                         <div id="strengths-list" class="space-y-4"></div>
                     </div>
                     <div class="bg-surface-container p-8 rounded-lg border border-error/10">
-                        <h4 class="font-headline text-xl text-error italic mb-6">Identified Frailties</h4>
+                        <h4 class="font-headline text-xl text-error italic mb-6">Areas to Improve</h4>
                         <div id="weaknesses-list" class="space-y-4"></div>
                     </div>
                 </div>
@@ -206,7 +200,7 @@
             <div class="max-w-7xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
                     <div class="md:col-span-12 mb-12 text-center">
-                        <h2 class="font-headline text-[8vw] leading-none text-surface-container-highest tracking-tighter opacity-30 select-none uppercase">Restoration</h2>
+                        <h2 class="font-headline text-[8vw] leading-none text-surface-container-highest tracking-tighter opacity-30 select-none uppercase">Improvement Plan</h2>
                     </div>
                     <div class="md:col-span-7">
                         <h3 class="font-headline text-4xl mb-12 italic border-b border-primary/20 pb-4">Strategic Roadmap</h3>
@@ -238,14 +232,6 @@
 <footer class="bg-[#0d0f0d] w-full py-20 px-8">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
         <div class="font-headline italic text-lg text-primary">Job Skill Gap Analyzer.</div>
-        <div class="flex gap-8">
-            <a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-background/60 hover:text-primary transition-opacity" href="#">Methodology</a>
-            <a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-background/60 hover:text-primary transition-opacity" href="#">Privacy</a>
-            <a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-background/60 hover:text-primary transition-opacity" href="#">Contact</a>
-        </div>
-        <p class="font-label text-[10px] uppercase tracking-[0.2em] text-secondary">
-            © 2026 The Technical Nocturne. Crafted for Precision.
-        </p>
     </div>
 </footer>
 
@@ -278,7 +264,7 @@
         loader.classList.remove('hidden');
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/analyze', {
+            const response = await fetch('/analyze', {
                 method: 'POST',
                 body: formData
             });
