@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -9,7 +10,13 @@ model = None
 
 def init_ml():
     global data, vectorizer, model
-    data = pd.read_csv("data/resumes.csv")
+    # Use absolute-relative path for Vercel/Local robustness
+    csv_path = os.path.join(os.path.dirname(__file__), "data", "resumes.csv")
+    
+    if not os.path.exists(csv_path):
+        raise FileNotFoundError(f"Missing required data file: {csv_path}")
+
+    data = pd.read_csv(csv_path)
     texts = data["resume_text"]
     skills = data["skills"]
     vectorizer = TfidfVectorizer()

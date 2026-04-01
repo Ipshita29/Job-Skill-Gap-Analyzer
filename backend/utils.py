@@ -5,13 +5,18 @@ from recommender import init_recommender, compute_similarity_score, get_ai_recom
 
 # --- STARTUP INITIALIZATION ---
 # This ensures the model is trained in-memory when the backend is loaded.
+# --- STARTUP INITIALIZATION ---
+# This ensures the model is trained in-memory when the backend is loaded.
 try:
     print("Pre-training ML model in-memory...")
     df = init_ml()
+    print("Initializing recommender system...")
     init_recommender(df)
     print("Backend AI ready.")
 except Exception as e:
-    print(f"Error during ML initialization: {e}")
+    import traceback
+    print(f"CRITICAL: Error during ML initialization: {e}")
+    traceback.print_exc()
 
 # reads pdf file and coverts to plain text
 

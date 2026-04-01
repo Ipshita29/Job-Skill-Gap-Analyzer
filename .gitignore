@@ -1,3 +1,14 @@
-backend/data/
+# Local development
+venv/
 __pycache__/
+*.pyc
 *.pkl
+.env
+.DS_Store
+
+# Vercel / Build artifacts
+.vercel/
+.vscode/
+
+# Ensure backend data is included for deployment
+!backend/data/resumes.csv

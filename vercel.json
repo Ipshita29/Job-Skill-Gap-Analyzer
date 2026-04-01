@@ -10,6 +10,12 @@
       "use": "@vercel/static"
     }
   ],
+  "functions": {
+    "backend/app.py": {
+      "maxDuration": 10,
+      "memory": 1024
+    }
+  },
   "routes": [
     {
       "src": "/analyze",
