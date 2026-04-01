@@ -325,15 +325,16 @@
 
         // Action Plan
         const actionPlan = document.getElementById('action-plan');
-        actionPlan.innerHTML = data.action_plan.map(step => {
-            const parts = step.split(':');
-            return `
-                <div class="group">
-                    <span class="font-label text-[10px] uppercase tracking-widest text-primary block mb-2 opacity-60 group-hover:opacity-100 transition-opacity">${parts[0]}</span>
-                    <p class="font-body text-lg text-on-surface-variant font-light group-hover:text-on-surface transition-colors">${parts[1]}</p>
-                </div>
-            `;
-        }).join('');
+        actionPlan.innerHTML = data.action_plan.map((step, index) => `
+            <div class="group">
+                <span class="font-label text-[10px] uppercase tracking-widest text-primary block mb-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                    Step ${index + 1}
+                </span>
+                <p class="font-body text-lg text-on-surface-variant font-light group-hover:text-on-surface transition-colors">
+                    ${step}
+                </p>
+            </div>
+        `).join('');
 
         // Tips
         const tipsContainer = document.getElementById('smart-tips');
