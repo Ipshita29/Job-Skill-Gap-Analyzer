@@ -22,16 +22,26 @@ def home():
 # API route
 @app.route('/analyze', methods=['POST'])
 def analyze_files():
-    
-    resume_file = request.files['resume']
-    jd_file = request.files['jd']
+    try:
+        print("Request received")
 
-    resume_text = extract_text_from_pdf(resume_file)
-    jd_text = extract_text_from_pdf(jd_file)
+        resume_file = request.files['resume']
+        jd_file = request.files['jd']
 
-    result = analyze(resume_text, jd_text)
+        resume_text = extract_text_from_pdf(resume_file)
+        jd_text = extract_text_from_pdf(jd_file)
 
-    return jsonify(result)
+        print("Text extracted")
+
+        result = analyze(resume_text, jd_text)
+
+        print("Analysis complete")
+
+        return jsonify(result)
+
+    except Exception as e:
+        print("ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 # IMPORTANT FOR DEPLOYMENT
 if __name__ == '__main__':
