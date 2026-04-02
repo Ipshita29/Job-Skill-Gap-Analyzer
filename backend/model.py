@@ -1,22 +1,25 @@
-import os
 import pandas as pd
+import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 
 data = None
 vectorizer = None
 model = None
+unique_skills = []
 
 
 def init_ml():
-    global data, vectorizer, model
-    # Use absolute-relative path for Vercel/Local robustness
-    csv_path = os.path.join(os.path.dirname(__file__), "data", "resumes.csv")
+    global data, vectorizer, model, unique_skills
+    data = pd.read_csv("data/resumes.csv")
     
-    if not os.path.exists(csv_path):
-        raise FileNotFoundError(f"Missing required data file: {csv_path}")
+    # Store unique skills from database for keyword matching
+    all_skills = set()
+    for s_list in data["skills"].dropna():
+        for s in s_list.split(","):
+            all_skills.add(s.strip().lower())
+    unique_skills = sorted(list(all_skills), key=len, reverse=True)
 
-    data = pd.read_csv(csv_path)
     texts = data["resume_text"]
     skills = data["skills"]
     vectorizer = TfidfVectorizer()
@@ -26,6 +29,11 @@ def init_ml():
     return data
 
 
+def extract_skills_keywords(text):
+    text_lower = text.lower()
+    return [s for s in unique_skills if re.search(r'\b' + re.escape(s) + r'\b', text_lower)]
+
+
 def extract_skills_ml(text):
     if model is None:
         return []
@@ -33,4 +41,4 @@ def extract_skills_ml(text):
     pred = model.predict(X)
 
     # convert "python,react" → ["python","react"]
-    return pred[0].split(",")
+    return [s.strip().lower() for s in pred[0].split(",")]
