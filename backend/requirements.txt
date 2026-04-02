@@ -2,7 +2,6 @@ flask
 flask-cors
 PyPDF2
 scikit-learn
-sentence-transformers
 numpy
 pandas
 gunicorn

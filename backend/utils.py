@@ -1,21 +1,20 @@
 from PyPDF2 import PdfReader
 from model import init_ml, extract_skills_ml, extract_skills_keywords
-from recommender import init_recommender, compute_similarity_score, get_ai_recommendations
 
-# ✅ Lazy initialization flag
+# Lazy initialization
 initialized = False
+
 
 def ensure_initialized():
     global initialized
     if not initialized:
-        print("Initializing ML models...")
-        df = init_ml()
-        init_recommender(df)
+        print("Initializing ML model...")
+        init_ml()
         initialized = True
-        print("Initialization complete.")
+        print("ML ready.")
 
 
-# reads pdf file and converts to plain text
+# extract text from PDF
 def extract_text_from_pdf(file):
     try:
         reader = PdfReader(file)
@@ -30,20 +29,31 @@ def extract_text_from_pdf(file):
         return ""
 
 
-# analysis part
+# main analysis
 def analyze(resume_text, jd_text):
 
-    # ✅ Ensure ML is loaded only when needed
     ensure_initialized()
 
     resume_skills = extract_skills_keywords(resume_text)
     jd_skills = extract_skills_keywords(jd_text)
 
-    matched = sorted(list(set(resume_skills) & set(jd_skills)))
-    missing = sorted(list(set(jd_skills) - set(resume_skills)))
+    # ML prediction
+    resume_ml_skills = extract_skills_ml(resume_text)
 
-    score = int(compute_similarity_score(resume_text, jd_text))
-    recommendations = get_ai_recommendations(resume_text, jd_text)
+    # combine keyword + ML
+    resume_all_skills = set(resume_skills + resume_ml_skills)
+
+    matched = sorted(list(resume_all_skills & set(jd_skills)))
+    missing = sorted(list(set(jd_skills) - resume_all_skills))
+
+    # score
+    score = int((len(matched) / len(jd_skills)) * 100) if jd_skills else 0
+
+    # recommendations
+    recommendations = [
+        {"skill": s, "suggestion": f"Learn {s} through projects"}
+        for s in missing[:5]
+    ]
 
     return {
         "matched": matched,
@@ -62,10 +72,10 @@ def generate_action_plan(missing):
         return ["Your profile is well aligned. Keep improving projects and apply to roles."]
 
     return [
-        f"Master the {', '.join(missing[:2])} skills through hands-on practice",
-        "Build complex projects incorporating these missing technologies",
-        "Update your resume with specific achievements in these areas",
-        "Apply to roles demonstrating your advanced skill set"
+        f"Master {', '.join(missing[:2])} through practice",
+        "Build projects using these skills",
+        "Update resume with measurable impact",
+        "Apply to relevant roles"
     ]
 
 
@@ -73,12 +83,12 @@ def generate_smart_tips(matched, missing):
     tips = []
 
     if missing:
-        tips.append(f"Focus on bridging the gap in {', '.join(missing[:2])}")
+        tips.append(f"Focus on learning {', '.join(missing[:2])}")
 
     if len(matched) > 3:
-        tips.append("Your technical foundation is strong in several areas")
+        tips.append("You have a strong technical base")
 
-    tips.append("Quantify your project impact in your resume bullet points")
+    tips.append("Quantify achievements in your resume")
 
     return tips
 
@@ -88,28 +98,30 @@ def generate_recruiter_view(matched, missing, score):
     weaknesses = []
 
     if matched:
-        strengths.append(f"Exhibits proficiency in {', '.join(matched[:3])}")
+        strengths.append(f"Strong in {', '.join(matched[:3])}")
 
     if score > 75:
-        strengths.append("Exceptional alignment with role requirements")
+        strengths.append("Good match for the role")
 
     if missing:
-        weaknesses.append(f"Gaps identified in {', '.join(missing[:2])}")
+        weaknesses.append(f"Missing {', '.join(missing[:2])}")
 
     if score < 50:
-        weaknesses.append("Significant skill gaps for this specific JD")
+        weaknesses.append("Needs improvement for this role")
 
     return {
-        "strengths": strengths if strengths else ["Potential talent alignment"],
-        "weaknesses": weaknesses if weaknesses else ["High-performing profile with minor gaps"]
+        "strengths": strengths if strengths else ["Decent profile"],
+        "weaknesses": weaknesses if weaknesses else ["Minor gaps"]
     }
 
 
 def generate_checklist(matched, missing):
     checklist = []
+
     for skill in missing[:2]:
-        checklist.append(f"Gain certification or build a project for {skill}")
+        checklist.append(f"Build a project using {skill}")
+
     for skill in matched[:2]:
-        checklist.append(f"Peer-review your projects involving {skill}")
+        checklist.append(f"Improve projects using {skill}")
 
     return checklist
