@@ -6,13 +6,18 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from utils import extract_text_from_pdf, analyze
 
-app = Flask(__name__, static_folder="frontend", static_url_path="")
+# absolute path to frontend (outside backend)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
 CORS(app)
 
 # Serve frontend
 @app.route('/')
 def home():
     return send_from_directory(app.static_folder, 'index.html')
+
 
 # API route
 @app.route('/analyze', methods=['POST'])
