@@ -1,20 +1,21 @@
 from PyPDF2 import PdfReader
-import os
 from model import init_ml, extract_skills_ml, extract_skills_keywords
 from recommender import init_recommender, compute_similarity_score, get_ai_recommendations
 
-# --- STARTUP INITIALIZATION ---
-# This ensures the model is trained in-memory when the backend is loaded.
-try:
-    print("Pre-training ML model in-memory...")
-    df = init_ml()
-    init_recommender(df)
-    print("Backend AI ready.")
-except Exception as e:
-    print(f"Error during ML initialization: {e}")
+# ✅ Lazy initialization flag
+initialized = False
 
-# reads pdf file and coverts to plain text
+def ensure_initialized():
+    global initialized
+    if not initialized:
+        print("Initializing ML models...")
+        df = init_ml()
+        init_recommender(df)
+        initialized = True
+        print("Initialization complete.")
 
+
+# reads pdf file and converts to plain text
 def extract_text_from_pdf(file):
     try:
         reader = PdfReader(file)
@@ -28,17 +29,19 @@ def extract_text_from_pdf(file):
         print(f"Error extracting PDF: {e}")
         return ""
 
-#analysis part 
 
+# analysis part
 def analyze(resume_text, jd_text):
-    # Minimal accuracy fix: Use keyword matching for precise results
+
+    # ✅ Ensure ML is loaded only when needed
+    ensure_initialized()
+
     resume_skills = extract_skills_keywords(resume_text)
     jd_skills = extract_skills_keywords(jd_text)
 
     matched = sorted(list(set(resume_skills) & set(jd_skills)))
     missing = sorted(list(set(jd_skills) - set(resume_skills)))
 
-    # IA Scoring (Semantic SBERT Similarity)
     score = int(compute_similarity_score(resume_text, jd_text))
     recommendations = get_ai_recommendations(resume_text, jd_text)
 
@@ -53,7 +56,6 @@ def analyze(resume_text, jd_text):
         "checklist": generate_checklist(matched, missing)
     }
 
-# compares resume and jd and give result
 
 def generate_action_plan(missing):
     if not missing:
@@ -67,7 +69,6 @@ def generate_action_plan(missing):
     ]
 
 
-# personalised tips
 def generate_smart_tips(matched, missing):
     tips = []
 
@@ -82,7 +83,6 @@ def generate_smart_tips(matched, missing):
     return tips
 
 
-# strengths and weaknesses
 def generate_recruiter_view(matched, missing, score):
     strengths = []
     weaknesses = []
@@ -105,7 +105,6 @@ def generate_recruiter_view(matched, missing, score):
     }
 
 
-# checklist
 def generate_checklist(matched, missing):
     checklist = []
     for skill in missing[:2]:
