@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-tertiary-fixed: #fadae9;
+  --color-outline: #8d928d;
+  --color-error: #ffb4ab;
+  --color-on-secondary-fixed: #0e1f15;
+  --color-surface-container-low: #1a1c1a;
+  --color-on-background: #e2e3df;
+  --color-surface-tint: #ebbac6;
+  --color-tertiary-fixed-dim: #ddbecd;
+  --color-tertiary: #ddbecd;
+  --color-surface: #121412;
+  --color-inverse-surface: #e2e3df;
+  --color-on-surface: #e2e3df;
+  --color-on-primary-container: #c698a4;
+  --color-primary-fixed-dim: #ebbac6;
+  --color-primary-container: #52303a;
+  --color-on-secondary-container: #a7baab;
+  --color-on-tertiary-fixed: #281620;
+  --color-surface-dim: #121412;
+  --color-on-primary-fixed-variant: #603d47;
+  --color-primary-fixed: #ffd9e2;
+  --color-secondary: #b8cbbc;
+  --color-error-container: #93000a;
+  --color-secondary-fixed: #d4e7d8;
+  --color-on-error-container: #ffdad6;
+  --color-on-primary: #472731;
+  --color-outline-variant: #434844;
+  --color-on-tertiary-container: #b99caa;
+  --color-inverse-primary: #7a545e;
+  --color-surface-bright: #383a37;
+  --color-tertiary-container: #49343f;
+  --color-surface-container-highest: #333533;
+  --color-secondary-fixed-dim: #b8cbbc;
+  --color-on-secondary-fixed-variant: #394b3f;
+  --color-surface-variant: #333533;
+  --color-surface-container-high: #282a28;
+  --color-surface-container-lowest: #0d0f0d;
+  --color-on-primary-fixed: #2f121c;
+  --color-primary: #ebbac6;
+  --color-on-surface-variant: #c3c8c2;
+  --color-secondary-container: #394b3f;
+  --color-surface-container: #1e201e;
+  --color-on-secondary: #233429;
+  --color-background: #121412;
+  --color-on-tertiary: #3f2a35;
+  --color-on-error: #690005;
+  --color-on-tertiary-fixed-variant: #56404c;
+  --color-inverse-on-surface: #2f312f;
+
+  --font-headline: "Noto Serif", serif;
+  --font-body: "Manrope", sans-serif;
+  --font-label: "Manrope", sans-serif;
+
+  --radius-DEFAULT: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+}
+
+@layer base {
+  body {
+    @apply bg-surface text-on-surface font-body selection:bg-primary-container selection:text-primary;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
