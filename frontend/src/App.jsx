@@ -37,7 +37,7 @@ function App() {
     setResults(null);
 
     try {
-      const response = await fetch('/analyze', {
+      const response = await fetch('https://job-skill-gap-analyzer-production.up.railway.app/analyze', {
         method: 'POST',
         body: formData
       });
